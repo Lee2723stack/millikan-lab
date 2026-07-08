@@ -75,22 +75,20 @@ async function start() {
     res.status(500).json({ error: '服务器内部错误' });
   });
 
-  // 先启动监听，再连数据库（避免数据库卡住导致网站打不开）
+  // 立即监听端口
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n========================================`);
-    console.log(`  密里根油滴实验数据采集系统已启动`);
-    console.log(`  监听端口: ${PORT}`);
-    console.log(`========================================\n`);
-    if (!process.env.RAILWAY_ENVIRONMENT) setTimeout(startTunnel, 1000);
+    console.log(`密里根油滴实验数据采集系统已启动，端口: ${PORT}`);
   });
 
-  // 异步连接数据库
-  try {
-    await initDatabase();
-    console.log('✅ 数据库连接成功');
-  } catch(e) {
-    console.error('❌ 数据库初始化失败:', e.message);
-  }
+  // 延迟2秒连接数据库，完全不阻塞启动
+  setTimeout(async () => {
+    try {
+      await initDatabase();
+      console.log('✅ 数据库连接成功');
+    } catch(e) {
+      console.error('❌ 数据库初始化失败:', e.message);
+    }
+  }, 2000);
 }
 
 start().catch(err => {
