@@ -1,0 +1,20 @@
+{
+  "name": "data-collection-app",
+  "version": "1.0.0",
+  "description": "多用户数据收集网页 - 支持运行时间、运动距离、平衡电压数据管理",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "localtunnel": "^2.0.2",
+    "multer": "^1.4.5-lts.1",
+    "sql.js": "^1.10.3",
+    "xlsx": "^0.18.5"
+  }
+}

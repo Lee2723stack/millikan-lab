@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>密里根油滴实验数据上传</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- ==================== 登录/注册页面 ==================== -->
+  <div id="auth-page" class="auth-page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="auth-logo">📊</div>
+        <h1>数据收集系统</h1>
+        <p>运行时间 · 运动距离 · 平衡电压 · 密里根油滴实验</p>
+      </div>
+
+      <!-- 登录表单 -->
+      <div id="login-form" class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">登录</button>
+          <button class="auth-tab" data-tab="register">注册</button>
+        </div>
+        <div class="form-group">
+          <label for="login-username">用户名</label>
+          <input type="text" id="login-username" placeholder="请输入用户名" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">密码</label>
+          <input type="password" id="login-password" placeholder="请输入密码" autocomplete="current-password">
+        </div>
+        <button id="login-btn" class="btn btn-primary btn-full">登 录</button>
+        <div class="auth-divider"><span>或</span></div>
+        <button id="anonymous-btn" class="btn btn-outline btn-full">匿名上传（无需注册）</button>
+      </div>
+
+      <!-- 注册表单（默认隐藏） -->
+      <div id="register-form" class="auth-card" style="display:none;">
+        <div class="auth-tabs">
+          <button class="auth-tab" data-tab="login">登录</button>
+          <button class="auth-tab active" data-tab="register">注册</button>
+        </div>
+        <div class="form-group">
+          <label for="reg-username">用户名</label>
+          <input type="text" id="reg-username" placeholder="3-20个字符" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="reg-password">密码</label>
+          <input type="password" id="reg-password" placeholder="至少6个字符" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="reg-password2">确认密码</label>
+          <input type="password" id="reg-password2" placeholder="再次输入密码" autocomplete="new-password">
+        </div>
+        <button id="register-btn" class="btn btn-primary btn-full">注 册</button>
+        <div class="auth-divider"><span>或</span></div>
+        <button id="anonymous-btn2" class="btn btn-outline btn-full">匿名上传（无需注册）</button>
+      </div>
+
+      <p class="auth-hint">默认管理员: admin / admin123</p>
+    </div>
+  </div>
+
+  <!-- ==================== 主应用页面（登录后可见） ==================== -->
+  <div id="app-page" class="app-page" style="display:none;">
+    <!-- 顶部导航 -->
+    <nav class="navbar">
+      <div class="nav-left">
+        <span class="nav-logo">📊</span>
+        <span class="nav-title">🔬 密里根油滴实验</span>
+      </div>
+      <div class="nav-center" id="nav-tabs">
+        <!-- 动态注入标签 -->
+      </div>
+      <div class="nav-right">
+        <span class="nav-user" id="nav-user-info"></span>
+        <button id="logout-btn" class="btn btn-sm btn-outline">退出</button>
+      </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content" id="main-content">
+      <!-- 动态渲染 -->
+    </main>
+  </div>
+
+  <!-- Toast 通知容器 -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- 确认对话框 -->
+  <div id="confirm-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="confirm-title">确认操作</h3>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="confirm-cancel">取消</button>
+        <button class="btn btn-danger" id="confirm-ok">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
