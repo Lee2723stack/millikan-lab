@@ -52,14 +52,27 @@ function startTunnel() {
 // 启动服务器
 async function start() {
   // 先初始化数据库
-  await initDatabase();
+  try {
+    await initDatabase();
+  } catch(e) {
+    console.error('数据库初始化失败:', e.message);
+  }
 
   // 数据库就绪后再加载路由
   app.use('/api/auth', require('./routes/auth'));
   app.use('/api/data', require('./routes/data'));
 
-  // 前端页面
+  // 健康检查
+  app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+  // 前端页面（放在路由之后，避免拦截 API）
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
   app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: '接口不存在' });
+    }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
   });
 
@@ -75,12 +88,14 @@ async function start() {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n========================================`);
     console.log(`  密里根油滴实验数据采集系统已启动`);
-    console.log(`  本地访问: http://localhost:${PORT}`);
+    console.log(`  监听端口: ${PORT}`);
     console.log(`  管理员账户: admin / admin123`);
     console.log(`========================================\n`);
 
-    // 启动公网隧道
-    setTimeout(startTunnel, 1000);
+    // Railway 不启动 localtunnel（有自己的域名）
+    if (!process.env.RAILWAY_ENVIRONMENT) {
+      setTimeout(startTunnel, 1000);
+    }
   });
 }
 
