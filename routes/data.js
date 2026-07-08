@@ -147,7 +147,7 @@ router.get('/my-data', authenticateToken, async (req, res) => {
       ...params, parseInt(limit), offset
     );
 
-    const stats = await db.get(`SELECT COUNT(*) as total_count, ROUND(AVG(run_time),2) as avg_run_time, ROUND(AVG(distance),2) as avg_distance, ROUND(AVG(voltage),4) as avg_voltage, ROUND(MAX(run_time),2) as max_run_time, ROUND(MAX(distance),2) as max_distance, ROUND(MAX(voltage),4) as max_voltage, ROUND(MIN(run_time),2) as min_run_time, ROUND(MIN(distance),2) as min_distance, ROUND(MIN(voltage),4) as min_voltage FROM data_records ${where}`, ...params);
+    const stats = await db.get(`SELECT COUNT(*) as total_count, ROUND(AVG(run_time)::numeric,2) as avg_run_time, ROUND(AVG(distance)::numeric,2) as avg_distance, ROUND(AVG(voltage)::numeric,4) as avg_voltage, ROUND(MAX(run_time)::numeric,2) as max_run_time, ROUND(MAX(distance)::numeric,2) as max_distance, ROUND(MAX(voltage)::numeric,4) as max_voltage, ROUND(MIN(run_time)::numeric,2) as min_run_time, ROUND(MIN(distance)::numeric,2) as min_distance, ROUND(MIN(voltage)::numeric,4) as min_voltage FROM data_records ${where}`, ...params);
 
     res.json({ records, pagination: { page: parseInt(page), limit: parseInt(limit), total, totalPages: Math.ceil(total / parseInt(limit)) }, statistics: stats });
   } catch (err) {
@@ -221,8 +221,8 @@ router.get('/all-data', authenticateToken, requireAdmin, async (req, res) => {
 router.get('/statistics', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const db = getDb();
-    const overview = await db.get(`SELECT COUNT(DISTINCT user_id) as total_users, COUNT(*) as total_records, ROUND(AVG(run_time),2) as avg_run_time, ROUND(AVG(distance),2) as avg_distance, ROUND(AVG(voltage),4) as avg_voltage FROM data_records`);
-    const userStats = await db.all(`SELECT u.id, u.username, u.role, COUNT(d.id) as record_count, ROUND(AVG(d.run_time),2) as avg_run_time, ROUND(AVG(d.distance),2) as avg_distance, ROUND(AVG(d.voltage),4) as avg_voltage FROM users u LEFT JOIN data_records d ON u.id = d.user_id GROUP BY u.id ORDER BY record_count DESC`);
+    const overview = await db.get(`SELECT COUNT(DISTINCT user_id) as total_users, COUNT(*) as total_records, ROUND(AVG(run_time)::numeric,2) as avg_run_time, ROUND(AVG(distance)::numeric,2) as avg_distance, ROUND(AVG(voltage)::numeric,4) as avg_voltage FROM data_records`);
+    const userStats = await db.all(`SELECT u.id, u.username, u.role, COUNT(d.id) as record_count, ROUND(AVG(d.run_time)::numeric,2) as avg_run_time, ROUND(AVG(d.distance)::numeric,2) as avg_distance, ROUND(AVG(d.voltage)::numeric,4) as avg_voltage FROM users u LEFT JOIN data_records d ON u.id = d.user_id GROUP BY u.id ORDER BY record_count DESC`);
     res.json({ overview, userStats });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -272,9 +272,9 @@ router.get('/global-statistics', authenticateToken, async (req, res) => {
   try {
     const db = getDb();
     const [overview, userBreakdown, dailyTrend, voltageDist] = await Promise.all([
-      db.get(`SELECT COUNT(DISTINCT user_id) as total_users, COUNT(*) as total_records, ROUND(AVG(run_time),2) as avg_run_time, ROUND(AVG(distance),2) as avg_distance, ROUND(AVG(voltage),4) as avg_voltage, ROUND(MAX(run_time),2) as max_run_time, ROUND(MAX(distance),2) as max_distance, ROUND(MAX(voltage),4) as max_voltage, ROUND(MIN(run_time),2) as min_run_time, ROUND(MIN(distance),2) as min_distance, ROUND(MIN(voltage),4) as min_voltage, ROUND(SUM(run_time),2) as sum_run_time, ROUND(SUM(distance),2) as sum_distance FROM data_records`),
-      db.all(`SELECT u.username, u.role, COUNT(d.id) as record_count, ROUND(AVG(d.run_time),2) as avg_run_time, ROUND(AVG(d.distance),2) as avg_distance, ROUND(AVG(d.voltage),4) as avg_voltage, ROUND(MAX(d.voltage),4) as max_voltage, ROUND(MIN(d.voltage),4) as min_voltage FROM users u INNER JOIN data_records d ON u.id = d.user_id GROUP BY u.id ORDER BY record_count DESC`),
-      db.all(`SELECT DATE(upload_time) as date, COUNT(*) as count, ROUND(AVG(run_time),2) as avg_run_time, ROUND(AVG(distance),2) as avg_distance, ROUND(AVG(voltage),4) as avg_voltage FROM data_records GROUP BY DATE(upload_time) ORDER BY date DESC LIMIT 30`),
+      db.get(`SELECT COUNT(DISTINCT user_id) as total_users, COUNT(*) as total_records, ROUND(AVG(run_time)::numeric,2) as avg_run_time, ROUND(AVG(distance)::numeric,2) as avg_distance, ROUND(AVG(voltage)::numeric,4) as avg_voltage, ROUND(MAX(run_time)::numeric,2) as max_run_time, ROUND(MAX(distance)::numeric,2) as max_distance, ROUND(MAX(voltage)::numeric,4) as max_voltage, ROUND(MIN(run_time)::numeric,2) as min_run_time, ROUND(MIN(distance)::numeric,2) as min_distance, ROUND(MIN(voltage)::numeric,4) as min_voltage, ROUND(SUM(run_time)::numeric,2) as sum_run_time, ROUND(SUM(distance)::numeric,2) as sum_distance FROM data_records`),
+      db.all(`SELECT u.username, u.role, COUNT(d.id) as record_count, ROUND(AVG(d.run_time)::numeric,2) as avg_run_time, ROUND(AVG(d.distance)::numeric,2) as avg_distance, ROUND(AVG(d.voltage)::numeric,4) as avg_voltage, ROUND(MAX(d.voltage)::numeric,4) as max_voltage, ROUND(MIN(d.voltage)::numeric,4) as min_voltage FROM users u INNER JOIN data_records d ON u.id = d.user_id GROUP BY u.id ORDER BY record_count DESC`),
+      db.all(`SELECT DATE(upload_time) as date, COUNT(*) as count, ROUND(AVG(run_time)::numeric,2) as avg_run_time, ROUND(AVG(distance)::numeric,2) as avg_distance, ROUND(AVG(voltage)::numeric,4) as avg_voltage FROM data_records GROUP BY DATE(upload_time) ORDER BY date DESC LIMIT 30`),
       db.all(`SELECT CASE WHEN voltage < 0 THEN '负电压' WHEN voltage < 1 THEN '0~1V' WHEN voltage < 2 THEN '1~2V' WHEN voltage < 3 THEN '2~3V' WHEN voltage < 5 THEN '3~5V' WHEN voltage < 10 THEN '5~10V' ELSE '≥10V' END as range, COUNT(*) as count FROM data_records GROUP BY range ORDER BY MIN(voltage)`)
     ]);
     res.json({ overview, userBreakdown, dailyTrend, voltageDist });
