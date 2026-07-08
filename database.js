@@ -65,7 +65,9 @@ class Database {
 async function initDatabase() {
   _pool = new Pool({
     connectionString: DATABASE_URL,
-    ssl: DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
+    ssl: DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false },
+    connectionTimeoutMillis: 10000,
+    max: 5
   });
 
   // 测试连接
