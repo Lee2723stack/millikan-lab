@@ -57,9 +57,12 @@ h3 { font-size: 17px; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   padding: 10px 22px; border-radius: var(--radius); font-size: 14px; font-weight: 500;
-  border: 1px solid transparent; cursor: pointer; transition: var(--transition);
+  border: 1px solid transparent; cursor: pointer; transition: all .15s ease;
   white-space: nowrap; user-select: none; font-family: inherit;
+  transform: scale(1); box-shadow: 0 1px 2px rgba(0,0,0,.06);
 }
+.btn:active { transform: scale(.96); box-shadow: inset 0 1px 3px rgba(0,0,0,.12); }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.1); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover { background: var(--primary-hover); }
@@ -80,11 +83,12 @@ h3 { font-size: 17px; }
 .form-group label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 .form-group input, .form-group select, .form-group textarea {
   width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius);
-  font-size: 14px; color: var(--text); background: var(--card); transition: var(--transition);
-  font-family: inherit;
+  font-size: 14px; color: var(--text); background: var(--card); font-family: inherit;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
   outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light);
+  background: #fcfdff;
 }
 .input-error { border-color: var(--danger) !important; }
 .form-row { display: flex; gap: 14px; }
@@ -95,15 +99,49 @@ h3 { font-size: 17px; }
 /* --- 登录页 --- */
 .auth-page {
   display: flex; align-items: center; justify-content: center; min-height: 100vh;
-  background: var(--bg); padding: 24px;
+  background: linear-gradient(160deg, #0f1b33 0%, #162447 30%, #1a2d56 60%, #0d1528 100%);
+  padding: 24px; position: relative; overflow: hidden;
 }
-.auth-container { width: 100%; max-width: 420px; }
+/* 微粒子光点 — 油滴实验暗场意境 */
+.auth-page::before {
+  content: ''; position: absolute; inset: 0; opacity: 0.6;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1px 1px at 20% 65%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.5px 1.5px at 35% 15%, rgba(180,200,255,.5), transparent),
+    radial-gradient(1px 1px at 50% 75%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1.5px 1.5px at 65% 40%, rgba(180,200,255,.45), transparent),
+    radial-gradient(1px 1px at 78% 85%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1px 1px at 88% 12%, rgba(200,215,255,.5), transparent),
+    radial-gradient(1.5px 1.5px at 15% 50%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 42% 88%, rgba(180,200,255,.35), transparent),
+    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.45), transparent),
+    radial-gradient(1.5px 1.5px at 95% 55%, rgba(200,215,255,.4), transparent),
+    radial-gradient(1px 1px at 55% 5%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 8% 92%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1.5px 1.5px at 60% 95%, rgba(180,200,255,.3), transparent);
+}
+/* 大光点呼吸动画 */
+.auth-page::after {
+  content: ''; position: absolute; inset: 0; opacity: 0.3;
+  background:
+    radial-gradient(3px 3px at 25% 30%, rgba(180,200,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 70% 50%, rgba(200,220,255,.5), transparent 50%),
+    radial-gradient(2.5px 2.5px at 50% 70%, rgba(180,200,255,.5), transparent 55%);
+  animation: particlePulse 4s ease-in-out infinite alternate;
+}
+@keyframes particlePulse {
+  0% { opacity: 0.2; transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(1.1); }
+}
+.auth-container { width: 100%; max-width: 420px; position: relative; z-index: 1; }
 .auth-header { text-align: center; margin-bottom: 28px; }
-.auth-header h1 { font-family: var(--font-heading); font-size: 28px; color: var(--primary); margin-bottom: 4px; }
-.auth-header p { font-size: 13px; color: var(--text-secondary); letter-spacing: 0.3px; }
+.auth-header h1 { font-family: var(--font-heading); font-size: 28px; color: rgba(255,255,255,.92); margin-bottom: 4px; }
+.auth-header p { font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: 0.3px; }
 .auth-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  padding: 32px; box-shadow: var(--shadow);
+  background: rgba(255,255,255,.95); border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--radius-lg); padding: 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25); backdrop-filter: blur(10px);
 }
 .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
 .auth-tab {
@@ -115,7 +153,6 @@ h3 { font-size: 17px; }
 .auth-divider { display: flex; align-items: center; margin: 18px 0; font-size: 12px; color: var(--text-muted); }
 .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .auth-divider span { padding: 0 14px; }
-.auth-hint { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 20px; }
 
 /* --- 导航栏 --- */
 .navbar {
@@ -143,8 +180,11 @@ h3 { font-size: 17px; }
 /* --- 卡片 --- */
 .card {
   background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--primary);
-  border-radius: var(--radius-lg); padding: 28px; margin-bottom: 22px; box-shadow: var(--shadow);
+  border-radius: var(--radius-lg); padding: 28px; margin-bottom: 22px;
+  box-shadow: var(--shadow); transition: transform .2s ease, box-shadow .2s ease;
+  transform: translateY(0);
 }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
 .card-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; }
 .card-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
@@ -154,7 +194,9 @@ h3 { font-size: 17px; }
 .stat-card {
   background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--primary);
   border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
 .stat-card:nth-child(2) { border-left-color: var(--success); }
 .stat-card:nth-child(3) { border-left-color: var(--warning); }
 .stat-card:nth-child(4) { border-left-color: var(--danger); }
@@ -173,8 +215,8 @@ thead th {
   letter-spacing: 0.4px; border-bottom: 2px solid var(--border); white-space: nowrap;
 }
 tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border-light); }
-tbody tr { transition: var(--transition); }
-tbody tr:hover { background: var(--primary-light); }
+tbody tr { transition: all .15s ease; transform: translateX(0); }
+tbody tr:hover { background: var(--primary-light); transform: translateX(3px); }
 .empty-row td { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
 
 /* --- 分页 --- */
@@ -192,9 +234,20 @@ tbody tr:hover { background: var(--primary-light); }
 /* --- 上传区 --- */
 .upload-zone {
   border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 44px;
-  text-align: center; cursor: pointer; transition: var(--transition); background: var(--bg);
+  text-align: center; cursor: pointer; transition: all .25s ease; background: var(--bg);
 }
-.upload-zone:hover, .upload-zone.drag-over { border-color: var(--primary); background: var(--primary-light); }
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--primary); background: var(--primary-light);
+  transform: scale(1.01); box-shadow: var(--shadow-md);
+}
+.upload-zone.drag-over {
+  animation: uploadPulse .8s ease-in-out infinite;
+  border-style: solid;
+}
+@keyframes uploadPulse {
+  0%, 100% { border-color: var(--primary); box-shadow: 0 0 0 0 rgba(44,62,107,.2); }
+  50% { border-color: #4a6099; box-shadow: 0 0 0 8px rgba(44,62,107,0); }
+}
 .upload-zone-icon { font-size: 36px; margin-bottom: 8px; }
 .upload-zone-text { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
 .upload-zone-hint { font-size: 12px; color: var(--text-muted); }
