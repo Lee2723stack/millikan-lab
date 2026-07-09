@@ -130,7 +130,7 @@ h3 { font-size: 17px; }
   33% { transform: translate(-25px, -30px) scale(1.1); }
   66% { transform: translate(20px, 15px) scale(.85); }
 }
-.auth-container { width: 100%; max-width: 420px; position: relative; z-index: 1; }
+.auth-container { width: 100%; max-width: 420px; position: relative; z-index: 2; pointer-events: auto; }
 .auth-header { text-align: center; margin-bottom: 28px; }
 .auth-header h1 { font-family: var(--font-heading); font-size: 28px; color: rgba(255,255,255,.92); margin-bottom: 4px; }
 .auth-header p { font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: 0.3px; }
