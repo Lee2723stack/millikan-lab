@@ -148,29 +148,23 @@ const Nav = {
 
     // 用户信息
     if (userEl && user) {
-      userEl.innerHTML = `<strong>${user.username}</strong>${isAdmin ? ' · 管理员' : ''}`;
+      userEl.innerHTML = `<strong>${user.username}</strong>`;
     }
 
-    // 导航项
-    const items = isAdmin
-      ? ['📤 上传数据', '📋 我的数据', '📊 统计分析', '🔬 实验计算', '👥 全部数据', '👤 用户管理']
-      : ['📤 上传数据', '📋 我的数据', '📊 统计分析', '🔬 实验计算'];
-    const views = isAdmin
-      ? ['upload', 'myData', 'stats', 'millikan', 'allData', 'users']
-      : ['upload', 'myData', 'stats', 'millikan'];
+    // 气泡导航项: [图标, 文字, view]
+    const navItems = isAdmin
+      ? [['📤','上传','upload'], ['📋','数据','myData'], ['📊','统计','stats'], ['🔬','计算','millikan'], ['👥','全部','allData'], ['👤','用户','users']]
+      : [['📤','上传','upload'], ['📋','数据','myData'], ['📊','统计','stats'], ['🔬','计算','millikan']];
 
-    navEl.innerHTML = items.map((label, i) => `
-      <li class="line-sidebar__item" data-view="${views[i]}" aria-current="${this.currentView === views[i] ? 'true' : 'false'}">
-        <span class="line-sidebar__marker" aria-hidden="true"></span>
-        <span class="line-sidebar__label">
-          <span class="line-sidebar__index">${String(i + 1).padStart(2, '0')}</span>
-          <span class="line-sidebar__text">${label.slice(2)}</span>
-        </span>
-      </li>
+    navEl.innerHTML = navItems.map(([icon, label, view]) => `
+      <button class="bubble-item ${this.currentView === view ? 'active' : ''}" data-view="${view}">
+        <span style="line-height:1">${icon}</span>
+        <span class="bubble-label">${label}</span>
+      </button>
     `).join('');
 
-    // 缓存 item 引用
-    this._items = [...navEl.querySelectorAll('.line-sidebar__item')];
+    // 缓存 items
+    this._items = [...navEl.querySelectorAll('.bubble-item')];
     this._targets = this._items.map(() => 0);
     this._currents = this._items.map(() => 0);
 
@@ -178,63 +172,6 @@ const Nav = {
     this._items.forEach(item => {
       item.addEventListener('click', () => this.switchTo(item.dataset.view));
     });
-
-    // 指针追踪
-    navEl.onpointermove = (e) => this._handlePointerMove(e);
-    navEl.onpointerleave = () => this._handlePointerLeave();
-
-    // 启动动画循环
-    this._startLoop();
-  },
-
-  _handlePointerMove(e) {
-    const rect = document.getElementById('sidebar-nav').getBoundingClientRect();
-    const py = e.clientY - rect.top;
-    const radius = 120;
-    this._items.forEach((el, i) => {
-      const center = el.offsetTop + el.offsetHeight / 2;
-      const dist = Math.abs(py - center);
-      const p = Math.max(0, 1 - dist / radius);
-      this._targets[i] = p * p * (3 - 2 * p); // smoothstep
-    });
-  },
-
-  _handlePointerLeave() {
-    this._targets = this._items.map(() => 0);
-  },
-
-  _startLoop() {
-    if (this._rafId) return;
-    let last = performance.now();
-    const run = (now) => {
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      const tau = 0.1;
-      const k = 1 - Math.exp(-dt / tau);
-      let moving = false;
-      this._items.forEach((el, i) => {
-        const target = Math.max(this._targets[i], this.currentView === el.dataset.view ? 1 : 0);
-        const cur = this._currents[i] || 0;
-        const next = cur + (target - cur) * k;
-        const settled = Math.abs(target - next) < 0.002;
-        this._currents[i] = settled ? target : next;
-        const v = this._currents[i];
-        el.style.setProperty('--effect', v.toFixed(4));
-        // 颜色混合
-        const r = Math.round(255 * (1 - v) + 255 * v);
-        const g = Math.round(255 * (1 - v) + 255 * v);
-        const b = Math.round(255 * (1 - v) + 255 * v);
-        el.style.color = `rgba(${r},${g},${b},${0.55 + v * 0.45})`;
-        el.style.paddingLeft = `${24 + v * 8}px`;
-        // marker 伸缩
-        const marker = el.querySelector('.line-sidebar__marker');
-        if (marker) marker.style.transform = `scaleX(${0.5 + v * 0.8})`;
-        if (!settled) moving = true;
-      });
-      if (moving) this._rafId = requestAnimationFrame(run);
-      else this._rafId = null;
-    };
-    this._rafId = requestAnimationFrame(run);
   },
 
   switchTo(view) {
