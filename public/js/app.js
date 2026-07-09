@@ -573,22 +573,26 @@ function renderDataTable(container, data, currentPage, loadFn) {
 
   container.innerHTML = statsHtml + '<div class="table-wrapper">' + tableHtml + '</div>' + paginationHtml;
 
-  // 表格行滚动渐入动画
+  // 表格行滚动渐入
   const wrapper = container.querySelector('.table-wrapper');
   const rows = container.querySelectorAll('tbody tr');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-  rows.forEach(r => observer.observe(r));
+  if (rows.length > 0) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { root: wrapper, threshold: 0, rootMargin: '0px 0px -40px 0px' });
+    rows.forEach(r => { if (!r.classList.contains('empty-row')) observer.observe(r); });
+  }
 
-  // 滚动渐变遮罩
-  const updateGradient = () => {
-    const st = wrapper.scrollTop, sh = wrapper.scrollHeight, ch = wrapper.clientHeight;
-    wrapper.style.setProperty('--tg', Math.min(st / 40, 1));
-    wrapper.style.setProperty('--bg', sh <= ch ? '0' : Math.min((sh - st - ch) / 40, 1));
-  };
-  wrapper.addEventListener('scroll', updateGradient);
-  updateGradient();
+  // 渐变遮罩
+  if (wrapper) {
+    const ug = () => {
+      const st = wrapper.scrollTop, sh = wrapper.scrollHeight - wrapper.clientHeight;
+      wrapper.style.setProperty('--tg', Math.min(st / 30, 1).toString());
+      wrapper.style.setProperty('--bg', sh <= 0 ? '0' : Math.min((sh - st) / 30, 1).toString());
+    };
+    wrapper.addEventListener('scroll', ug, { passive: true });
+    ug();
+  }
 
   // 绑定分页事件
   container.querySelectorAll('.pagination button[data-page]').forEach(btn => {
