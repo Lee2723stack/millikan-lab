@@ -1604,9 +1604,6 @@ function enterApp() {
   document.getElementById('auth-page').style.display = 'none';
   document.getElementById('app-page').style.display = 'block';
 
-  const user = Auth.getUser();
-  document.getElementById('nav-user-info').innerHTML = `👤 <strong>${user.username}</strong> ${Auth.isAdmin() ? '<span class="badge badge-danger">管理员</span>' : ''}`;
-
   Nav.currentView = 'upload';
   Nav.render();
   Nav.loadView('upload');
