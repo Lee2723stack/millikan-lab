@@ -1543,6 +1543,12 @@ function enterApp() {
 function init() {
   bindAuthEvents();
 
+  // 滚动横幅点击导航
+  document.getElementById('logo-track').addEventListener('click', (e) => {
+    const btn = e.target.closest('.logo-item');
+    if (btn?.dataset.nav) UI.switchTo(btn.dataset.nav);
+  });
+
   // 如果已有有效 token，自动进入应用
   if (Auth.isLoggedIn()) {
     // 验证 token 是否仍然有效

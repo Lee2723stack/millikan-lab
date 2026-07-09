@@ -348,7 +348,11 @@ tbody tr:hover { background: var(--primary-light); transform: translateX(3px); }
 .logo-item {
   color: rgba(255,255,255,.85); font-size: 13px; font-weight: 500;
   letter-spacing: 0.3px; white-space: nowrap;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  padding: 4px 12px; border-radius: var(--radius);
+  transition: background .2s, color .2s;
 }
+.logo-item:hover { background: rgba(255,255,255,.12); color: #fff; }
 .logo-sep { color: rgba(255,255,255,.3); font-size: 10px; }
 @keyframes logoScroll {
   0% { transform: translateX(0); }
