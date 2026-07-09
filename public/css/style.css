@@ -217,6 +217,13 @@ h3 { font-size: 17px; }
 .stat-unit { font-size: 13px; font-weight: 400; color: var(--text-muted); margin-left: 4px; }
 
 /* --- 表格 --- */
+.table-wrapper { position: relative; overflow: auto; max-height: 500px; }
+.table-wrapper::before, .table-wrapper::after {
+  content: ''; position: sticky; left: 0; right: 0; height: 40px; z-index: 2; pointer-events: none;
+  transition: opacity .3s;
+}
+.table-wrapper::before { top: 0; background: linear-gradient(to bottom, var(--card), transparent); opacity: var(--tg, 0); }
+.table-wrapper::after { bottom: 0; background: linear-gradient(to top, var(--card), transparent); opacity: var(--bg, 1); }
 .table-container { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 thead th {
@@ -225,8 +232,12 @@ thead th {
   letter-spacing: 0.4px; border-bottom: 2px solid var(--border); white-space: nowrap;
 }
 tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border-light); }
-tbody tr { transition: all .15s ease; transform: translateX(0); }
-tbody tr:hover { background: var(--primary-light); transform: translateX(3px); }
+tbody tr {
+  transition: all .15s ease; transform: translateX(0);
+  opacity: 0; transform: translateY(16px);
+}
+tbody tr.visible { opacity: 1; transform: translateY(0); }
+tbody tr:hover { background: var(--primary-light); transform: translateX(3px) !important; }
 .empty-row td { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
 
 /* --- 分页 --- */

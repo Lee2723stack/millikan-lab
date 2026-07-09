@@ -571,7 +571,24 @@ function renderDataTable(container, data, currentPage, loadFn) {
     paginationHtml += '</div>';
   }
 
-  container.innerHTML = statsHtml + tableHtml + paginationHtml;
+  container.innerHTML = statsHtml + '<div class="table-wrapper">' + tableHtml + '</div>' + paginationHtml;
+
+  // 表格行滚动渐入动画
+  const wrapper = container.querySelector('.table-wrapper');
+  const rows = container.querySelectorAll('tbody tr');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+  rows.forEach(r => observer.observe(r));
+
+  // 滚动渐变遮罩
+  const updateGradient = () => {
+    const st = wrapper.scrollTop, sh = wrapper.scrollHeight, ch = wrapper.clientHeight;
+    wrapper.style.setProperty('--tg', Math.min(st / 40, 1));
+    wrapper.style.setProperty('--bg', sh <= ch ? '0' : Math.min((sh - st - ch) / 40, 1));
+  };
+  wrapper.addEventListener('scroll', updateGradient);
+  updateGradient();
 
   // 绑定分页事件
   container.querySelectorAll('.pagination button[data-page]').forEach(btn => {
@@ -588,7 +605,6 @@ function renderDataTable(container, data, currentPage, loadFn) {
       try {
         await api.del(`/data/my-record/${id}`);
         Toast.success('数据已删除');
-        // 重新加载当前页
         const pageBtns = container.querySelectorAll('.pagination button.active');
         const page = pageBtns.length > 0 ? parseInt(pageBtns[0].dataset.page) : 1;
         loadFn(page);
@@ -947,7 +963,13 @@ function renderAllDataTable(container, data, currentPage) {
     html += '</div>';
   }
 
-  container.innerHTML = html;
+  container.innerHTML = '<div class="table-wrapper">' + html + '</div>';
+
+  // 表格行滚动渐入
+  const wrapper = container.querySelector('.table-wrapper');
+  container.querySelectorAll('tbody tr').forEach(r => {
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) e.target.classList.add('visible'); }, { threshold: 0.1 }).observe(r);
+  });
 
   // 绑定事件
   container.querySelectorAll('.pagination button[data-page]').forEach(btn => {
