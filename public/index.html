@@ -63,48 +63,28 @@
 
   <!-- ==================== 主应用页面（登录后可见） ==================== -->
   <div id="app-page" class="app-page" style="display:none;">
-    <!-- 顶部导航 -->
-    <nav class="navbar">
-      <div class="nav-left">
-        <span class="nav-title">密里根油滴实验</span>
-      </div>
-      <div class="nav-center" id="nav-tabs">
-        <!-- 动态注入标签 -->
-      </div>
-      <div class="nav-right">
-        <span class="nav-user" id="nav-user-info"></span>
-        <button id="logout-btn" class="btn btn-sm btn-outline">退出</button>
-      </div>
-    </nav>
-
-    <!-- 快速导航滚动横幅 -->
-    <div class="logo-banner" id="logo-banner">
-      <div class="logo-track" id="logo-track">
-        <button class="logo-item" data-nav="upload">📤 上传数据</button>
-        <span class="logo-sep">·</span>
-        <button class="logo-item" data-nav="myData">📋 我的数据</button>
-        <span class="logo-sep">·</span>
-        <button class="logo-item" data-nav="stats">📊 统计分析</button>
-        <span class="logo-sep">·</span>
-        <button class="logo-item" data-nav="millikan">🔬 实验计算</button>
-        <!-- 第二份副本用于无缝循环 -->
-        <button class="logo-item" data-nav="upload">📤 上传数据</button>
-        <span class="logo-sep">·</span>
-        <button class="logo-item" data-nav="myData">📋 我的数据</button>
-        <span class="logo-sep">·</span>
-        <button class="logo-item" data-nav="stats">📊 统计分析</button>
-        <span class="logo-sep">·</span>
-        <button class="logo-item" data-nav="millikan">🔬 实验计算</button>
+    <div class="app-layout">
+      <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <span class="sidebar-title">密里根<br>油滴实验</span>
+        </div>
+        <ul class="sidebar-nav" id="sidebar-nav">
+          <!-- 动态注入导航项 -->
+        </ul>
+        <div class="sidebar-footer">
+          <span class="sidebar-user" id="sidebar-user-info"></span>
+          <button id="logout-btn" class="btn btn-sm" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);width:100%;margin-top:8px;">退出</button>
+        </div>
+      </nav>
+      <div class="app-main">
+        <main class="main-content" id="main-content">
+          <!-- 动态渲染 -->
+        </main>
+        <footer class="app-footer">
+          <span>Millikan Oil Drop Experiment</span> · 密里根油滴实验数据采集系统
+        </footer>
       </div>
     </div>
-
-    <!-- 主内容区 -->
-    <main class="main-content" id="main-content">
-      <!-- 动态渲染 -->
-    </main>
-    <footer class="app-footer">
-      <span>Millikan Oil Drop Experiment</span> · 密里根油滴实验数据采集系统
-    </footer>
   </div>
 
   <!-- Toast 通知容器 -->
