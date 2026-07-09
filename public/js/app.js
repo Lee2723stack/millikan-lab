@@ -575,12 +575,22 @@ function renderDataTable(container, data, currentPage, loadFn) {
 
   // 表格行滚动渐入
   const wrapper = container.querySelector('.table-wrapper');
-  const rows = container.querySelectorAll('tbody tr');
-  if (rows.length > 0) {
+  const rows = container.querySelectorAll('tbody tr:not(.empty-row)');
+  if (rows.length > 0 && wrapper) {
+    // 先让所有行不可见
+    rows.forEach(r => { r.style.opacity = '0'; r.style.transform = 'translateY(12px)'; });
+    // observer 在 wrapper 内检测
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { root: wrapper, threshold: 0, rootMargin: '0px 0px -40px 0px' });
-    rows.forEach(r => { if (!r.classList.contains('empty-row')) observer.observe(r); });
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '';
+          e.target.style.transform = '';
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { root: wrapper, threshold: 0 });
+    rows.forEach(r => observer.observe(r));
   }
 
   // 渐变遮罩
@@ -588,7 +598,7 @@ function renderDataTable(container, data, currentPage, loadFn) {
     const ug = () => {
       const st = wrapper.scrollTop, sh = wrapper.scrollHeight - wrapper.clientHeight;
       wrapper.style.setProperty('--tg', Math.min(st / 30, 1).toString());
-      wrapper.style.setProperty('--bg', sh <= 0 ? '0' : Math.min((sh - st) / 30, 1).toString());
+      wrapper.style.setProperty('--bg', sh <= 1 ? '0' : Math.min((sh - st) / 30, 1).toString());
     };
     wrapper.addEventListener('scroll', ug, { passive: true });
     ug();
