@@ -99,32 +99,36 @@ h3 { font-size: 17px; }
 /* --- 登录页 --- */
 .auth-page {
   display: flex; align-items: center; justify-content: center; min-height: 100vh;
-  background-color: #0d1528;
-  background-image:
-    radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,.55), transparent),
-    radial-gradient(1px 1px at 25% 60%, rgba(200,220,255,.4), transparent),
-    radial-gradient(2px 2px at 40% 10%, rgba(180,200,255,.45), transparent),
-    radial-gradient(1px 1px at 55% 75%, rgba(255,255,255,.35), transparent),
-    radial-gradient(1.5px 1.5px at 70% 30%, rgba(200,220,255,.5), transparent),
-    radial-gradient(1px 1px at 82% 80%, rgba(255,255,255,.4), transparent),
-    radial-gradient(2px 2px at 90% 15%, rgba(180,210,255,.45), transparent),
-    radial-gradient(1px 1px at 15% 55%, rgba(255,255,255,.3), transparent),
-    radial-gradient(1.5px 1.5px at 45% 90%, rgba(200,220,255,.35), transparent),
-    radial-gradient(1px 1px at 75% 20%, rgba(255,255,255,.45), transparent),
-    radial-gradient(2px 2px at 95% 50%, rgba(180,200,255,.4), transparent),
-    radial-gradient(1px 1px at 58% 8%, rgba(255,255,255,.3), transparent),
-    radial-gradient(1.5px 1.5px at 8% 88%, rgba(255,255,255,.35), transparent),
-    radial-gradient(1px 1px at 62% 95%, rgba(200,220,255,.3), transparent),
-    radial-gradient(2px 2px at 35% 45%, rgba(180,200,255,.35), transparent),
-    linear-gradient(160deg, #0f1b33 0%, #162447 40%, #1a2d56 70%, #0d1528 100%);
-  background-size: 500px 500px, 500px 500px, 400px 400px, 600px 600px, 450px 450px, 500px 500px, 400px 400px, 550px 550px, 500px 500px, 450px 450px, 400px 400px, 600px 600px, 500px 500px, 550px 550px, 450px 450px, 100% 100%;
-  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-  animation: particleDrift 20s linear infinite;
+  background: #0d1528;
   padding: 24px; position: relative; overflow: hidden;
 }
-@keyframes particleDrift {
-  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
-  100% { background-position: 500px -100px, -300px 300px, 200px -200px, -400px 100px, 100px 300px, -200px -300px, 400px 200px, -100px -100px, 300px -300px, -500px 200px, -200px 100px, 100px -200px, -300px -100px, 400px 300px, -100px -300px, 0 0; }
+/* 柔光光斑 1 — 左上 */
+.auth-page::before {
+  content: ''; position: absolute;
+  top: -20%; left: -15%;
+  width: 60%; height: 60%;
+  background: radial-gradient(ellipse, rgba(60,100,180,.18) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: floatSpot1 12s ease-in-out infinite;
+}
+/* 柔光光斑 2 — 右下 */
+.auth-page::after {
+  content: ''; position: absolute;
+  bottom: -25%; right: -10%;
+  width: 55%; height: 55%;
+  background: radial-gradient(ellipse, rgba(80,130,200,.15) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: floatSpot2 15s ease-in-out infinite;
+}
+@keyframes floatSpot1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.15); }
+  66% { transform: translate(-15px, 25px) scale(.9); }
+}
+@keyframes floatSpot2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-25px, -30px) scale(1.1); }
+  66% { transform: translate(20px, 15px) scale(.85); }
 }
 .auth-container { width: 100%; max-width: 420px; position: relative; z-index: 1; }
 .auth-header { text-align: center; margin-bottom: 28px; }
